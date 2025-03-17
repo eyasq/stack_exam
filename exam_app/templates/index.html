@@ -3,10 +3,73 @@
 {% block title %}Index Page - Stack Exam{% endblock %}
 
 {% block content %}
-<div class="container m-5">
+<div class="container" style="margin:0 auto;">
 
-<h1 class="display-1">Python Stack Exam</h1>
+<h1 class="display-1 text-center text-info">Eyes on the Pies</h1>
 
+<div class="container d-flex mt-5">
+    <div class="col-4">
+        <form action="post_register" method="post">
+            <h1>Register</h1>
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="first_name" class="form-label">First name</label>
+              <input type="text" class="form-control" id="first_name" name="first_name" required value="{{request.session.bad_data.bad_first_name}}">
+              {% if request.session.errors.first_name %}
+              <small class="text-danger">{{request.session.errors.first_name}}</small>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" required value="{{request.session.bad_data.bad_last_name}}">
+                {% if request.session.errors.last_name %}
+                <small class="text-danger">{{request.session.errors.last_name}}</small>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required value="{{request.session.bad_data.bad_email}}">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                {% if request.session.errors.email %}
+                <small class="text-danger">{{request.session.errors.email}}</small>
+                {% endif %}
+              </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
+              {% if request.session.errors.password %}
+              <small class="text-danger">{{request.session.errors.password}}</small>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword2" class="form-label">Confirm PW</label>
+                <input type="password" class="form-control" id="exampleInputPassword2" name="confirm_pw" required>
+                {% if request.session.errors.confirm_pw %}
+                <small class="text-danger">{{request.session.errors.confirm_pw}}</small>
+                {% endif %}
+              </div>
+            <button type="submit" class="btn btn-primary offset-9">Register</button>
+          </form>
+    </div>
+    <div class="col-4 offset-2">
+        <form action="post_login" method="post">
+            <h1>Login</h1>
+            {% csrf_token %}
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" aria-describedby="" name="email" required>
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+              </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary offset-9">Login</button>
+          </form>
+
+    </div>
+
+    </div>  
 
 
 
