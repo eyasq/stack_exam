@@ -1,0 +1,95 @@
+{% extends "root.html" %}
+
+{% block title %}Index Page - Stack Exam{% endblock %}
+
+{% block content %}
+<div class="container" style="margin:0 auto;">
+    <div class="row">
+    <div class="d-flex justify-content-between align-items-center mt-5">    
+        <h1 class="display-6">Welcome, {{user.first_name}}</h1>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+<div class="row m-5">
+    <div class="col-5">
+    <h1 class="display-6">Pies by {{user.first_name}}</h1>
+    <table class="table table-striped-columns table-striped-rows mt-3">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+
+          </tr>
+        </thead>
+        <tbody>
+            {% for pie in pies %}
+          <tr>
+            <th scope="row">{{pie.name}}</th>
+            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+          </tr>
+          {%endfor%}
+
+
+        </tbody>
+      </table>
+
+
+</div>
+
+
+<div class="col-4 offset-2 ">
+
+    <h1 class="display-6">Add a New Pie</h1>
+    {% if request.session.pie_errors %}
+    <div class="text-danger">
+        <ul>
+            {% for key, values in request.session.pie_errors.items %}
+                <li><strong>{{ key|capfirst }}:</strong>
+                    <ul>
+                        {% for value in values %}
+                            <li>{{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    <form action="/add_pie" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="pie_name" class="form-label">Pie Name</label>
+            <input type="text" class="form-control" id="pie_name" name="pie_name" required value="{{request.session.bad_data.bad_pie_name}}">
+            {% if request.session.errors.pie_name %}
+            <small class="text-danger">{{request.session.errors.pie_name}}</small>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label for="pie_filling" class="form-label">Pie Filling</label>
+            <input type="text" class="form-control" id="pie_filling" name="pie_filling" required value="{{request.session.bad_data.bad_pie_filling}}">
+            {% if request.session.errors.pie_filling %}
+            <small class="text-danger">{{request.session.errors.pie_filling}}</small>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label for="pie_crust" class="form-label">Crust</label>
+            <input type="text" class="form-control" id="pie_crust" name="pie_crust" required value="{{request.session.bad_data.bad_pie_crust}}">
+            {% if request.session.errors.pie_crust %}
+            <small class="text-danger">{{request.session.errors.pie_crust}}</small>
+            {% endif %}
+          </div>
+          <button type="submit" class="mt-2 btn btn-primary offset-9">Add Pie</button>
+
+    </form>
+</div>
+
+
+
+
+</div>
+
+</div>
+
+
+
+{% endblock %}

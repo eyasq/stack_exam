@@ -20,5 +20,10 @@ from django.urls import include, path
 from exam_app import views
 
 urlpatterns = [
-    path('', views.index)
+    path('', views.index),
+    path('post_register', views.post_register),
+    path('post_login', views.post_login),
+    path('logout', views.logout),
+    path('dashboard', views.dashboard),
+    path('add_pie', views.add_pie),
 ]
