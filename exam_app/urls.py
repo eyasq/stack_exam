@@ -26,4 +26,7 @@ urlpatterns = [
     path('logout', views.logout),
     path('dashboard', views.dashboard),
     path('add_pie', views.add_pie),
+    path('pies', views.all_pies),
+    path('pies/<int:pie_id>', views.show_pie),
+    path('vote/<int:pie_id>', views.vote_pie)
 ]

@@ -1,0 +1,50 @@
+{% extends "root.html" %}
+
+{% block title %}Index Page - Stack Exam{% endblock %}
+
+{% block content %}
+<div class="container" style="margin:0 auto;">
+    <div class="row">
+    <div class="d-flex justify-content-end align-items-center mt-5">    
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+    <h1 class="display-4">All Pies</h1>
+    <div class="col-9 offset-1">
+    <table class="table table-striped mt-3">
+        <thead>
+          <tr>
+            <th scope="col">Pie </th>
+            <th scope="col">Baker</th>
+            <th scope="col">Votes</th>
+
+
+          </tr>
+        </thead>
+        <tbody>
+            {% for pie in pies %}
+          <tr>
+            <th scope="row"> <a href="/pies/{{pie.id}}">{{pie.name}}</a></th>
+            <td>{{pie.user.first_name}}</td>
+            <td>{{pie.votes}}</td>
+          </tr>
+          {%endfor%}
+
+
+        </tbody>
+      </table>
+
+      <p class="fs-4 mt-5"><a href="/pies">All Pies</a></p>
+
+
+
+
+
+
+</div>
+
+</div>
+
+
+
+{% endblock %}

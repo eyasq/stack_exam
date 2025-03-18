@@ -13,7 +13,7 @@
 <div class="row m-5">
     <div class="col-5">
     <h1 class="display-6">Pies by {{user.first_name}}</h1>
-    <table class="table table-striped-columns table-striped-rows mt-3">
+    <table class="table table-striped-columns table-striped mt-3">
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -33,28 +33,13 @@
         </tbody>
       </table>
 
-
+      <p class="fs-4 mt-5"><a href="/pies">All Pies</a></p>
 </div>
 
 
 <div class="col-4 offset-2 ">
 
     <h1 class="display-6">Add a New Pie</h1>
-    {% if request.session.pie_errors %}
-    <div class="text-danger">
-        <ul>
-            {% for key, values in request.session.pie_errors.items %}
-                <li><strong>{{ key|capfirst }}:</strong>
-                    <ul>
-                        {% for value in values %}
-                            <li>{{ value }}</li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endif %}
     <form action="/add_pie" method="post">
         {% csrf_token %}
         <div class="mb-3">
@@ -81,6 +66,8 @@
           <button type="submit" class="mt-2 btn btn-primary offset-9">Add Pie</button>
 
     </form>
+
+
 </div>
 
 

@@ -92,5 +92,15 @@ class Pie(models.Model):
     filling = models.CharField(max_length=32)
     crust = models.CharField(max_length=32)
     votes = models.IntegerField(default = 0)
+    desc = models.TextField(default='A really yummy pie. Highly Recoomended')
     user = models.ForeignKey(User, related_name='pies', on_delete=models.CASCADE)
+    voters = models.ManyToManyField(User, related_name='voted_pies', through='Vote')
     objects = PieManager()
+
+
+class Vote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pie = models.ForeignKey(Pie, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        unique_together = ('user', 'pie')  

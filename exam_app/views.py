@@ -2,7 +2,7 @@ import bcrypt
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from exam_app.models import Pie, User
+from exam_app.models import Pie, User, Vote
 
 # Create your views here.
 def index(request):
@@ -110,3 +110,33 @@ def add_pie(request):
         del request.session['errors']
     messages.success(request, 'Pie Added Successfully!')
     return redirect('/dashboard')
+
+def all_pies(request):
+    pies = Pie.objects.all()
+    context = {
+        "pies":pies
+    }
+    return render(request,'allpies.html',context)
+
+def show_pie(request, pie_id):
+    pie = Pie.objects.get(id = pie_id)
+    current_user = User.objects.get(id = request.session['current_user_id'])
+    context = {
+        'pie' : pie,
+        'user':current_user
+    }
+    
+    return render(request, 'show_pie.html', context)
+
+def vote_pie(request, pie_id):
+    user = User.objects.get(id = request.session['current_user_id'])
+    pie = Pie.objects.get(id = pie_id)
+    existing_vote = Vote.objects.filter(user = user, pie = pie).first()
+    if existing_vote:
+        messages.error(request, 'Cannot vote for pie already voted for.')
+    Vote.objects.create(user = user, pie = pie)
+    messages.success(request, 'Vote casted successfully')
+    new_vote_count = int(pie.votes)+1
+    pie.votes = new_vote_count
+    pie.save()
+    return redirect('/pies')
