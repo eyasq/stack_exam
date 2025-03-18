@@ -18,7 +18,6 @@ def post_register(request):
             "bad_first_name":postData['first_name'],
             "bad_last_name":postData['last_name'],
             "bad_email":postData['email']
-
         }
         request.session['bad_data'] = bad_data
         request.session['errors'] = errors
@@ -37,6 +36,8 @@ def post_register(request):
         password = hashed_pw,
     )
     request.session.clear()
+    del request.session['bad_data'] 
+    del request.session['errors'] 
     messages.success(request, 'Register Successfull! Please Login')
     return redirect('/')
 
@@ -65,6 +66,7 @@ def post_login(request):
 
 def logout(request):
     request.session.clear()
+    del request.session['current_user_id']
     request.session['is_logged_in'] = False
     messages.success(request,"Successfully Logged Out!")
     return redirect('/')
