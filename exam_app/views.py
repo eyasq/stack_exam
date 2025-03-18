@@ -112,7 +112,7 @@ def add_pie(request):
     return redirect('/dashboard')
 
 def all_pies(request):
-    pies = Pie.objects.all()
+    pies = Pie.objects.all().order_by('-votes')
     context = {
         "pies":pies
     }
@@ -131,12 +131,75 @@ def show_pie(request, pie_id):
 def vote_pie(request, pie_id):
     user = User.objects.get(id = request.session['current_user_id'])
     pie = Pie.objects.get(id = pie_id)
-    existing_vote = Vote.objects.filter(user = user, pie = pie).first()
-    if existing_vote:
-        messages.error(request, 'Cannot vote for pie already voted for.')
-    Vote.objects.create(user = user, pie = pie)
-    messages.success(request, 'Vote casted successfully')
-    new_vote_count = int(pie.votes)+1
-    pie.votes = new_vote_count
-    pie.save()
+    vote, created = Vote.objects.get_or_create(user=user, pie=pie)
+    if created:
+        messages.success(request, 'Vote added successfully')
+        new_vote_count = int(pie.votes) + 1
+        pie.votes = new_vote_count
+        pie.save()
+        request.session['latest_vote_id'] = vote.id
+    else:
+        messages.info(request, 'You have already voted for this pie')
     return redirect('/pies')
+
+def remove_vote(request):
+    try:
+        vote = Vote.objects.get(id = request.session.get('latest_vote_id'))
+        pie = vote.pie
+        pie.votes = max(0, int(pie.votes) - 1)
+        pie.save()
+        vote.delete()
+        del request.session['latest_vote_id']
+        messages.success(request, 'Vote Removed')
+    except Vote.DoesNotExist:
+        messages.error(request, 'No vote to remove')
+    return redirect('/pies')
+
+def edit_pie(request, pie_id):
+    pie = Pie.objects.filter(id = pie_id).first()
+    if not pie:
+        messages.error(request, 'Pie Does Not Exist')
+        return redirect('/dashboard')
+    pie_owner = pie.user
+    current_user = User.objects.get(id = request.session['current_user_id'])
+    if not pie_owner == current_user:
+        messages.error(request, 'You are not authorized to Edit this pie!!!')
+        return redirect('/dashboard')
+    context = {
+        "pie":pie
+    }
+    return render(request,'edit_pie.html',context)
+
+def post_edit_pie(request):
+    postData = request.POST
+    errors = Pie.objects.pie_edit_validator(postData)
+    pie = Pie.objects.get(id = postData['pie_id'])
+    if errors:
+        print(errors)
+        bad_data = {
+            "bad_pie_name":postData['pie_name'],
+            "bad_pie_filling":postData['pie_filling'],
+            "bad_pie_crust":postData['pie_crust']
+        }
+        request.session['bad_data'] = bad_data
+        request.session['errors'] = errors
+        messages.error(request, 'Pie Editing failed!')
+        return redirect(f'/pies/edit/{pie.id}')
+    pie.name = postData['pie_name']
+    pie.crust = postData['pie_crust']
+    pie.filling = postData['pie_filling']
+    pie.save()
+    messages.success(request, 'Pie Edited Successfully!')
+    return redirect('/dashboard')
+
+def delete(request, pie_id):
+    pie = Pie.objects.filter(id = pie_id).first()
+    pie_owner = pie.user
+    current_user = User.objects.get(id = request.session['current_user_id'])
+    if not pie_owner == current_user:
+        messages.error(request, 'You are not authorized to Delete this pie!!!')
+        return redirect('/dashboard')
+    pie.delete()
+    messages.success(request, 'Succesfully Deleted Pie')
+    return redirect('/dashboard')
+    

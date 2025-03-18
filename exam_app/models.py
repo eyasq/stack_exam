@@ -74,7 +74,32 @@ class PieManager(models.Manager):
         elif len(pie_crust) > 32:
             errors['pie_crust'] = 'Pie Crust can be 32 characters at max'
         return errors
-   
+    def pie_edit_validator(self, postData):
+        errors = {}
+        pie_name = postData.get('pie_name')
+        if not pie_name:
+            errors['pie_name'] = 'Pie Name is a required Field!'
+        elif len(pie_name) < 2:
+            errors['pie_name'] = 'Pie Name must be at least 2 characters.'
+        elif len(pie_name) > 32:
+            errors['pie_name'] = 'Pie Name can be 32 characters at max'
+        elif pie_name and self.exclude(id=postData['pie_id']).filter(name=pie_name).exists():
+            errors['pie_name'] = 'Pie Name must be unique! There is already a pie with this name.'
+        pie_filling = postData.get('pie_filling')
+        if not pie_filling:
+            errors['pie_filling'] = 'Pie Filling is a required Field!'
+        elif len(pie_filling) < 2:
+            errors['pie_filling'] = 'Pie Filling must be at least 2 characters.'
+        elif len(pie_filling) > 32:
+            errors['pie_filling'] = 'Pie Filling can be 32 characters at max'
+        pie_crust = postData.get('pie_crust')
+        if not pie_crust:
+            errors['pie_crust'] = 'Pie Crust is a required Field!'
+        elif len(pie_crust) < 2:
+            errors['pie_crust'] = 'Pie Crust must be at least 2 characters.'
+        elif len(pie_crust) > 32:
+            errors['pie_crust'] = 'Pie Crust can be 32 characters at max'
+        return errors
     
 
 

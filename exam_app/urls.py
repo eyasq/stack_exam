@@ -28,5 +28,9 @@ urlpatterns = [
     path('add_pie', views.add_pie),
     path('pies', views.all_pies),
     path('pies/<int:pie_id>', views.show_pie),
-    path('vote/<int:pie_id>', views.vote_pie)
+    path('vote/<int:pie_id>', views.vote_pie),
+    path('remove_vote', views.remove_vote),
+    path('pies/edit/<int:pie_id>', views.edit_pie),
+    path('edit_pie', views.post_edit_pie),
+    path('delete/<int:pie_id>', views.delete)
 ]

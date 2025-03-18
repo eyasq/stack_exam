@@ -1,0 +1,47 @@
+{% extends "root.html" %}
+
+{% block title %}Index Page - Stack Exam{% endblock %}
+
+{% block content %}
+<div class="container" style="margin:0 auto;">
+
+
+    <h1 class="display-6 mt-5">Edit Pie:</h1>
+    <form action="/edit_pie" method="post">
+        {% csrf_token %}
+        <div class="mb-3 col-6">
+            <label for="pie_name" class="form-label">Pie Name</label>
+            <input type="text" class="form-control" id="pie_name" name="pie_name" required value="{{pie.name}}">
+            {% if request.session.errors.pie_name %}
+            <small class="text-danger">{{request.session.errors.pie_name}}</small>
+            {% endif %}
+          </div>
+          <div class="mb-3 col-6">
+            <label for="pie_filling" class="form-label">Pie Filling</label>
+            <input type="text" class="form-control" id="pie_filling" name="pie_filling" required value="{{pie.filling}}">
+            {% if request.session.errors.pie_filling %}
+            <small class="text-danger">{{request.session.errors.pie_filling}}</small>
+            {% endif %}
+          </div>
+          <div class="mb-3 col-6">
+            <label for="pie_crust" class="form-label">Crust</label>
+            <input type="text" class="form-control" id="pie_crust" name="pie_crust" required value="{{pie.crust}}">
+            {% if request.session.errors.pie_crust %}
+            <small class="text-danger">{{request.session.errors.pie_crust}}</small>
+            {% endif %}
+          </div>
+          <input type="hidden" value="{{pie.id}}" name="pie_id">
+          <button type="submit" class="mt-2 btn btn-primary offset-5">Edit Pie</button>
+
+    </form>
+
+    <p class="fs-4 mt-5"><a href="/dashboard">Back to my pies</a></p>
+
+</div>
+
+
+
+
+
+
+{% endblock %}

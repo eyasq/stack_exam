@@ -25,7 +25,7 @@
             {% for pie in pies %}
           <tr>
             <th scope="row">{{pie.name}}</th>
-            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+            <td><a href="/pies/edit/{{pie.id}}">Edit</a> | <a href="/delete/{{pie.id}}">Delete</a></td>
           </tr>
           {%endfor%}
 
